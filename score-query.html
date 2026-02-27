@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>成绩查询结果</title>
   <style>
     :root {
@@ -10,7 +10,7 @@
       --card: #ffffff;
       --line: #e4e4e7;
       --text: #1f2937;
-      --warn-bg: #f4efdf;
+      --warn-bg: #FFFAE8;
       --warn-text: #666;
       --button: #2e95e0;
       --font-main: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
@@ -120,7 +120,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      background: #2f95de url("pic/01.png") center center / 100% 100% no-repeat;
+      background: #2f95de url("assets/01.png") center center / 100% 100% no-repeat;
       color: #fff;
       overflow: hidden;
       padding: 0 24px;
@@ -225,7 +225,7 @@
     }
 
     .mobile-title {
-      background: #2f95de url("pic/01.png") center center / 100% 100% no-repeat;
+      background: #2f95de url("assets/01.png") center center / 100% 100% no-repeat;
       color: #fff;
       text-align: center;
       font-size: clamp(16px, 5vw, 22px);
@@ -433,6 +433,16 @@
       margin-top: 12px;
     }
 
+    .admin-disclaimer {
+      margin: 10px 0 2px;
+      padding-top: 10px;
+      border-top: 1px solid #e5e7eb;
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
     .admin-btn {
       border: none;
       border-radius: 6px;
@@ -455,7 +465,7 @@
       grid-column: 1 / -1;
     }
 
-    @media (max-width: 768px) and (hover: none) and (pointer: coarse) {
+    @media (hover: none) and (pointer: coarse) {
       .desktop-view {
         display: none;
       }
@@ -500,13 +510,13 @@
       <div class="desktop-main">
         <div class="wap-nav-bar wap-nav-bar-border">
           <div class="wap-nav-bar__left">
-            <img src="origin/全国硕士研究生招生考试部分考生初试成绩查询系统_files/logo.png" alt="研招网" class="logo" />
+            <img src="assets/logo.png" alt="研招网" class="logo" />
           </div>
           <div class="wap-nav-bar__right">
             <div class="nav-search">
-              <span><img src="origin/全国硕士研究生招生考试部分考生初试成绩查询系统_files/nav-user.svg" alt="用户" /></span>
-              <span><img src="origin/全国硕士研究生招生考试部分考生初试成绩查询系统_files/icon-search-wap.svg" alt="搜索" /></span>
-              <span><img src="origin/全国硕士研究生招生考试部分考生初试成绩查询系统_files/nav-menu.svg" alt="菜单" /></span>
+              <span><img src="assets/nav-user.svg" alt="用户" /></span>
+              <span><img src="assets/icon-search-wap.svg" alt="搜索" /></span>
+              <span><img src="assets/nav-menu.svg" alt="菜单" /></span>
             </div>
           </div>
         </div>
@@ -559,13 +569,13 @@
       <div class="mobile-main">
         <div class="wap-nav-bar wap-nav-bar-border">
           <div class="wap-nav-bar__left">
-            <img src="origin/全国硕士研究生招生考试部分考生初试成绩查询系统_files/logo.png" alt="研招网" class="logo" />
+            <img src="assets/logo.png" alt="研招网" class="logo" />
           </div>
           <div class="wap-nav-bar__right">
             <div class="nav-search">
-              <span><img src="origin/全国硕士研究生招生考试部分考生初试成绩查询系统_files/nav-user.svg" alt="用户" /></span>
-              <span><img src="origin/全国硕士研究生招生考试部分考生初试成绩查询系统_files/icon-search-wap.svg" alt="搜索" /></span>
-              <span><img src="origin/全国硕士研究生招生考试部分考生初试成绩查询系统_files/nav-menu.svg" alt="菜单" /></span>
+              <span><img src="assets/nav-user.svg" alt="用户" /></span>
+              <span><img src="assets/icon-search-wap.svg" alt="搜索" /></span>
+              <span><img src="assets/nav-menu.svg" alt="菜单" /></span>
             </div>
           </div>
         </div>
@@ -622,6 +632,7 @@
       <button type="button" class="admin-btn warn" id="resetBtn">恢复默认</button>
       <button type="button" class="admin-btn secondary" id="closeBtn">关闭</button>
     </div>
+    <p class="admin-disclaimer">本页面为模拟娱乐用途，数据均为虚构，不具任何法律效力。使用风险自负，真实成绩请以官方渠道查询。</p>
   </section>
 
   <script>
@@ -787,6 +798,19 @@
 
       document.getElementById("resetBtn").addEventListener("click", function () {
         reset();
+      });
+
+      document.addEventListener("wheel", function (e) {
+        if (e.ctrlKey) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      document.addEventListener("keydown", function (e) {
+        if (!e.ctrlKey) return;
+        if (e.key === "+" || e.key === "-" || e.key === "=" || e.key === "0") {
+          e.preventDefault();
+        }
       });
     })();
   </script>

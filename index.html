@@ -475,6 +475,16 @@
       grid-column: 1 / -1;
     }
 
+    .watermark-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1000;
+      background-repeat: repeat;
+      background-position: 0 0;
+      background-size: auto;
+    }
+
     html.ua-mobile .desktop-view {
       display: none;
     }
@@ -664,6 +674,8 @@
       </div>
     </section>
   </main>
+  <!-- 水印容器 -->
+  <div id="watermarkContainer" class="watermark-container"></div>
 
   <button class="admin-fab" id="adminFab" title="编辑内容">⚙</button>
 
@@ -691,6 +703,8 @@
         ["subtitle", "副标题"],
         ["noticeTitle", "说明标题"],
         ["noticeText", "说明内容", "textarea"],
+        ["watermarkEnabled", "开启水印", "checkbox"],
+        ["watermarkText", "水印内容"],
         ["name", "姓名"],
         ["regNo", "报名号"],
         ["examNo", "准考证号"],
@@ -710,6 +724,8 @@
         noticeTitle: "招生单位说明",
         notice1: "1. 我校不提供专业排名查询，不提供纸质版成绩。",
         notice2: "2. 我校各专业复试分数线将在国家线发布后复试名单公布时划定。",
+        watermarkEnabled: false,
+        watermarkText: "仅供演示使用",
         name: "李华",
         regNo: "5147944",
         examNo: "2213114",
@@ -743,7 +759,11 @@
 
           var input = document.querySelector('[data-input="' + key + '"]');
           if (input) {
-            input.value = data[key] || "";
+            if (input.type === "checkbox") {
+              input.checked = !!data[key];
+            } else {
+              input.value = data[key] || "";
+            }
           }
         });
 
@@ -751,6 +771,8 @@
         if (noticeInput) {
           noticeInput.value = [data.notice1 || "", data.notice2 || ""].filter(Boolean).join("\n");
         }
+
+        updateWatermark(data);
       }
 
       function buildEditor() {
@@ -768,11 +790,10 @@
           title.textContent = label;
 
           var control = document.createElement(type === "textarea" ? "textarea" : "input");
-          control.className = type === "textarea" ? "admin-textarea" : "admin-input";
+          control.className = type === "textarea" ? "admin-textarea" : (type === "checkbox" ? "" : "admin-input");
           control.setAttribute("data-input", key);
-          if (type !== "textarea") {
-            control.type = "text";
-          }
+          if (type === "checkbox") control.type = "checkbox";
+          if (type !== "textarea" && type !== "checkbox") control.type = "text";
 
           field.appendChild(title);
           field.appendChild(control);
@@ -785,7 +806,14 @@
         schema.forEach(function (item) {
           var key = item[0];
           var input = document.querySelector('[data-input="' + key + '"]');
-          var value = input ? input.value.trim() : "";
+          var value = "";
+          if (input) {
+            if (input.type === "checkbox") {
+              value = input.checked;
+            } else {
+              value = input.value.trim();
+            }
+          }
 
           if (key === "noticeText") {
             var lines = value
@@ -809,6 +837,38 @@
 
       buildEditor();
       render(mergeData());
+
+      function buildWatermarkDataURL(text) {
+        var canvas = document.createElement("canvas");
+        var size = 300;
+        canvas.width = size;
+        canvas.height = size;
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, size, size);
+        ctx.translate(size / 2, size / 2);
+        ctx.rotate(-Math.PI / 6);
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "#EBEBEB";
+        ctx.font = "28px " + getComputedStyle(document.documentElement).getPropertyValue("--font-main").trim() + ", sans-serif";
+        ctx.fillText(text, 0, 0);
+        return canvas.toDataURL("image/png");
+      }
+
+      function updateWatermark(data) {
+        var container = document.getElementById("watermarkContainer");
+        if (!container) return;
+        var enabled = !!data.watermarkEnabled;
+        var text = (data.watermarkText || "").trim();
+        if (enabled && text) {
+          var url = buildWatermarkDataURL(text);
+          container.style.display = "block";
+          container.style.backgroundImage = "url(" + url + ")";
+        } else {
+          container.style.backgroundImage = "none";
+          container.style.display = "none";
+        }
+      }
 
       function detectAdminMode() {
         var params = new URLSearchParams(location.search);

@@ -81,6 +81,20 @@
       max-width: 100%;
     }
 
+    .nav-sep {
+      display: inline-block;
+      width: 1px;
+      height: 22px;
+      background: var(--line);
+      margin: 0 12px;
+    }
+
+    .nav-title {
+      color: #000;
+      font-size: 20px;
+      line-height: 1;
+    }
+
     .wap-nav-bar .wap-nav-bar__right {
       position: absolute;
       right: 0;
@@ -516,6 +530,15 @@
       width: 22px;
     }
 
+    html.ua-mobile .nav-sep {
+      height: 18px;
+      margin: 0 10px;
+    }
+
+    html.ua-mobile .nav-title {
+      font-size: 17px;
+    }
+
     html.ua-mobile .admin-drawer {
       right: 12px;
       bottom: 74px;
@@ -567,6 +590,8 @@
         <div class="wap-nav-bar wap-nav-bar-border">
           <div class="wap-nav-bar__left">
             <img src="assets/logo.png" alt="研招网" class="logo" />
+            <span class="nav-sep"></span>
+            <span class="nav-title">成绩查询</span>
           </div>
           <div class="wap-nav-bar__right">
             <div class="nav-search">
@@ -627,6 +652,8 @@
         <div class="wap-nav-bar wap-nav-bar-border">
           <div class="wap-nav-bar__left">
             <img src="assets/logo.png" alt="研招网" class="logo" />
+            <span class="nav-sep"></span>
+            <span class="nav-title">成绩查询</span>
           </div>
           <div class="wap-nav-bar__right">
             <div class="nav-search">
@@ -707,6 +734,7 @@
         ["noticeText", "说明内容", "textarea"],
         ["watermarkEnabled", "开启水印", "checkbox"],
         ["watermarkText", "水印内容"],
+        ["showNotice", "招生单位说明", "checkbox"],
         ["traceNo", "查询流水号"],
         ["name", "姓名"],
         ["regNo", "报名号"],
@@ -729,6 +757,7 @@
         notice2: "2. 我校各专业复试分数线将在国家线发布后复试名单公布时划定。",
         watermarkEnabled: false,
         watermarkText: "仅供演示使用",
+        showNotice: true,
         traceNo: "022808250086840965939",
         name: "李华",
         regNo: "5147944",
@@ -777,6 +806,12 @@
         }
 
         updateWatermark(data);
+
+        var mobileNotice = document.querySelector(".mobile-notice");
+        var desktopNote = document.querySelector(".desktop-note");
+        var show = data.showNotice !== false;
+        if (mobileNotice) mobileNotice.style.display = show ? "" : "none";
+        if (desktopNote) desktopNote.style.display = show ? "" : "none";
       }
 
       function buildEditor() {
